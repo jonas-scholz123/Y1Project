@@ -14,3 +14,5 @@ ___
 # 1. Introduction
 
 ### Snake
+
+![snake](screenshot.png)

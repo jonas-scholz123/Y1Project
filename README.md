@@ -15,4 +15,4 @@ ___
 
 ### Snake
 
-![snake](screenshot.png)
+![snake](/screenshot.png)

@@ -5,10 +5,21 @@ If you're unsure exactly what Snake is it's worth [playing a few games](https://
 
 #### Download the materials with [this link](https://github.com/conor-or/ai-snake/archive/master.zip)
 
-#### Read the below for an overview of the method.
+#### You will need to install [TensorFlow](https://www.tensorflow.org/install/) and [Keras](https://keras.io/#installation) (in that order) before we start.
+
+#### Read the below for an overview of the method and the results we might hope for.
 
 #### Watch [this video](https://www.youtube.com/watch?v=ZX2Hyu5WoFg) for a decent introduction to the general ideas esp. neural networks and genetic algorithms (non-technical discussion)
 
+___
+
+# 0. Logistics
+
+I've already coded the game which is contained in the `snake.py` script. To train our network we'll use the `train.py` script which runs all the games for a generation in sequence. It takes the weights for that generation as an input and outputs the scores to a file. If you want to play the game yourself you can turn off the AI by setting `ai=False` in the `train.py` script.
+
+The neural network is in `neural_network.py`. You can build the network here using Keras.
+
+You should set the weights in a separate script (or a Jupyter notebook is even better) and examine the scores there, working through the generations to find the winners. You shouldn't need to modify the scripts apart from to construct the network itself.
 ___
 
 # 1. Introduction
@@ -55,15 +66,7 @@ This technique borrows wholesale from biology and employs evolution by natural s
 
 Each set of networks is called a _generation_ and each generation inherits the characteristics (the _genes_) of the previous generation but in different combinations. Much like in the real world we can introduce _mutations_ to the population to push the evolution forward by adding randomness at each stage.
 
-# 4. Method/Logistics
-
-We'll do the whole thing in Python. I've coded the game which is contained in the `snake.py` script. To train our network we'll use the `train.py` script which runs all the games for a generation in sequence. It takes the weights for that generation as an input and outputs the scores to a file. If you want to play the game yourself you can turn off the AI by setting `ai=False` in the `train.py` script.
-
-The neural network is in `neural_network.py`. You can build the network here using Keras.
-
-You should set the weights in a separate script (or a Jupyter notebook is even better) and examine the scores there, working through the generations to find the winners. You shouldn't need to modify the scripts apart from to construct the network itself.
-
-# 5. Results
+# 4. Results
 We might be interested in the following questions:
 
 __In training the network__

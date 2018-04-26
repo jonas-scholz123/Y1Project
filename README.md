@@ -7,7 +7,7 @@ If you're unsure exactly what Snake is it's worth [playing a few games](https://
 
 #### Read the below for an overview of the method.
 
-#### Watch this video [this video](https://www.youtube.com/watch?v=ZX2Hyu5WoFg) for a decent introduction to the general ideas esp. neural networks and genetic algorithms (non-technical discussion)
+#### Watch [this video](https://www.youtube.com/watch?v=ZX2Hyu5WoFg) for a decent introduction to the general ideas esp. neural networks and genetic algorithms (non-technical discussion)
 
 ___
 
@@ -45,4 +45,37 @@ A neural network (NN) is essentially just a very complicated function which take
 
 The NN is made up of nodes or _neurons_ organised into _layers_. Each neuron is really a very simple function (for example: _y_ = _w_ * _X_). It receives some _X_ from the input data and computes _y_ given some constant(s) _w_ called the _weights_. If our input has 4 numbers then all the nodes in the first _layer_ take a vector _X_ of 4 numbers. These nodes might connect to one single node providing an output _y_ or they might again be the input for a second layer. A NN with multiple layers between input and output is called a _deep neural network_ and the layers between input and output are called _hidden layers_.
 
-The __weights__, _w_ tell the network exactly what output to give based on the input and the weights encode all of the information about the data we have. We learn the weights by _training_ the network. At first the weights are random. We then use the network to predict a _y_ value based on some data where we _already know the true outcome_. The network then adjusts its own weights depending on how close it was to the true value.  
+The __weights__, _w_ tell the network exactly what output to give based on the input and the weights encode all of the information about the data we have. We learn the weights by _training_ the network. At first the weights are random. We then use the network to predict a _y_ value based on some data where we _already know the true outcome_. The network then adjusts its own weights depending on how close it was to the true value. This data, where we already know the true outcome to compare to the prediction, is called the _training data_ or _training set_.
+
+In our situation, we don't have any training set. If we had data from 100s or 1000s of human games of snake we could simply _fit_ the network to this data and it would play more or less like a human very quickly. Of course, you're welcome to play 1000s of games to generate the data, but there is a simpler way.
+
+# 3. Genetic Algorithms
+
+This technique borrows wholesale from biology and employs evolution by natural selection to find the best network weights. We start by initialising all the weights in our network randomly in ~100s of different ways. We then run games of snake using each of these networks and see which ones perform best according to some _fitness_ function. The best ones are used to initialise the next set of networks and so on. 
+
+Each set of networks is called a _generation_ and each generation inherits the characteristics (the _genes_) of the previous generation but in different combinations. Much like in the real world we can introduce _mutations_ to the population to push the evolution forward by adding randomness at each stage.
+
+# 4. Method/Logistics
+
+We'll do the whole thing in Python. I've coded the game which is contained in the `snake.py` script. To train our network we'll use the `train.py` script which runs all the games for a generation in sequence. It takes the weights for that generation as an input and outputs the scores to a file. If you want to play the game yourself you can turn off the AI by setting `ai=False` in the `train.py` script.
+
+The neural network is in `neural_network.py`. You can build the network here using Keras.
+
+You should set the weights in a separate script (or a Jupyter notebook is even better) and examine the scores there, working through the generations to find the winners. You shouldn't need to modify the scripts apart from to construct the network itself.
+
+# 5. Results
+We might be interested in the following questions:
+
+__In training the network__
+* How many children to use per generation, how  many of the best to keep from the previous generation
+* How to select the best of each generation: do we emphasise snake length, length of life etc?
+* Is there a way we can measure the amount of information being passed down each generation?
+* What level of mutation do we add at each generation: too little and the AI never learns anything new, too much and the AI can't pass on the knowledge gained by previous generations.
+
+__In the AI's general performance__
+* At what point does the AI start to beat the average human player (if ever?)
+* How does the setup of the network effect the AI (number of layers, types of functions etc)
+* What are the AI's limitations, do we know things it cannot know?
+* Is the AI stubborn, i.e. will it easily adapt to new surroundings like adding obstacles or changing the game world?
+
+

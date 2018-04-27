@@ -13,6 +13,8 @@ class Model:
         # Construct the model below using
         # model.add(...)
         self.model = Sequential()
+        self.model.add(Dense(3, input_shape=(4,)))
+        self.model.add(Dense(1))
 
     def get_weights(self):
 

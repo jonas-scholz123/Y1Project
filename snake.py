@@ -275,28 +275,39 @@ class SnakeApp:
 
     def restart(self, event=None):
 
-        # Initialise the snake
-        if not self.ai:
-            self.master.bind('<space>', lambda a: self.update(a, first_step=True))
+        # Close program if we've reached the last iteration
+        if self.iteration == len(self.weights):
+            
+            self.master.destroy()
+            
+        else:
+        
+            # Initialise the snake
+            if not self.ai:
+                self.master.bind('<space>', lambda a: self.update(a, first_step=True))
 
-        self.moves.append(self.move_counter + (self.score * 10))
-        if len(self.moves) % 10 == 0:
-            np.save('/Users/conor/Documents/maze/moves_%d' % self.generation, self.moves)
+            self.moves.append(self.move_counter + (self.score * 10))
+            if len(self.moves) % 10 == 0:
+                np.save('/Users/conor/Documents/maze/moves_%d' % self.generation, self.moves)
 
-        self.move_counter = 0
-        self.snake = []
-        self.direction = []
-        self.snake_init()
-        self.food_pos = [0, 0]
-        self.food_init()
-        self.score = 0
-        self.score_var.set('Data: %d' % self.score)
-        self.itr_var.set('Chromosone %d/%d' % (self.iteration, len(self.weights)))
-        self.draw_canvas()
-        self.iteration += 1
-        self.model.model.set_weights(self.weights[self.iteration])
-        self.update(first_step=True)
+            self.move_counter = 0
+            self.snake = []
+            self.direction = []
+            self.snake_init()
+            self.food_pos = [0, 0]
+            self.food_init()
+            self.score = 0
+            self.score_var.set('Data: %d' % self.score)
+            self.draw_canvas()
+            self.itr_var.set('Chromosone %d/%d' % (self.iteration, len(self.weights)))
+            self.model.model.set_weights(self.weights[self.iteration])
+            
+            self.iteration += 1
+            
+            self.update(first_step=True)
 
+            
+            
     def self_collision_check(self):
 
         prev_h_x, prev_h_y = self.snake[-1]

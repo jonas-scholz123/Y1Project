@@ -64,4 +64,3 @@ def makegrid(y_width, x_width):
     return grid, head_y, head_x
 
 snake_length = 30
-print(makegrid(15, 15))

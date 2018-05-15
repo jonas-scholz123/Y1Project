@@ -2,7 +2,7 @@
 
     This is the script for training the AI.
     It loads in the game from the script snake.py
-    
+
     Use AI=True/False to turn the AI on/off i.e. to play the
     game yourself.
 
@@ -26,10 +26,9 @@ def train(gen, weights):
     # each set of weights in the weights file
     app = SnakeApp(root, weights, gen, ai=True)
     root.mainloop()
-    
+
     return app.moves
 
 if __name__ == '__main__':
-    
+
     train(argv[1])
-    

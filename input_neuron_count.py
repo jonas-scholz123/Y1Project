@@ -17,6 +17,8 @@ def floodfill(grid, y, x):
             floodfill(grid, y + 1 , x)
     return count
 
+# hello
+
 def best_dir(grid, head_y, head_x):
     global count
     mod_grid = grid.copy()

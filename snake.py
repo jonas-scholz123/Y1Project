@@ -3,6 +3,12 @@ import random
 import numpy as np
 from neural_net import Model
 
+'''
+UP = 0
+RIGHT = 1
+DOWN = 2
+LEFT = 3
+'''
 
 class SnakeApp:
 
@@ -277,18 +283,18 @@ class SnakeApp:
 
         # Close program if we've reached the last iteration
         if self.iteration == len(self.weights):
-            
+
             self.master.destroy()
-            
+
         else:
-        
+
             # Initialise the snake
             if not self.ai:
                 self.master.bind('<space>', lambda a: self.update(a, first_step=True))
 
             self.moves.append(self.move_counter + (self.score * 10))
             if len(self.moves) % 10 == 0:
-                np.save('/Users/conor/Documents/maze/moves_%d' % self.generation, self.moves)
+                np.save('./moves_%d.npy' % self.generation, self.moves)
 
             self.move_counter = 0
             self.snake = []
@@ -299,17 +305,17 @@ class SnakeApp:
             self.score = 0
             self.score_var.set('Data: %d' % self.score)
             self.draw_canvas()
+
             self.itr_var.set('Chromosone %d/%d' % (self.iteration, len(self.weights)))
             self.model.model.set_weights(self.weights[self.iteration])
-            
+
             self.iteration += 1
-            
+
             self.update(first_step=True)
 
-            
-            
-    def self_collision_check(self):
 
+
+    def self_collision_check(self):
         prev_h_x, prev_h_y = self.snake[-1]
 
         # Move the head in the current direction
@@ -373,6 +379,104 @@ class SnakeApp:
             check = False
 
         return check
+
+
+
+
+
+    # def count_space_up(self):
+    #
+    #     if self.direction == 0:
+    #         return 0
+    #
+    #     prev_h_x, prev_h_y = self.snake[-1]
+    #     x = prev_h_x
+    #     y = prev_h_y + 1
+    #
+    #     global count
+    #     if grid[y][x] == 0:
+    #         grid[y][x] = 3
+    #         count += 1
+    #         if x > 0:
+    #             floodfill(grid, y, x - 1)
+    #         if x < len(grid[y]) - 1:
+    #             floodfill(grid , y, x + 1)
+    #         if y > 0:
+    #             floodfill(grid, y - 1, x)
+    #         if y < len(grid) - 1:
+    #             floodfill(grid, y + 1 , x)
+    #     return count
+    #
+    # def count_space_right(self):
+    #
+    #     if self.direction = 1:
+    #         return 0
+    #
+    #     prev_h_x, prev_h_y = self.snake[-1]
+    #     x = prev_h_x + 1
+    #     y = prev_h_y
+    #
+    #     global count
+    #     if grid[y][x] == 0:
+    #         grid[y][x] = 3
+    #         count += 1
+    #         if x > 0:
+    #             floodfill(grid, y, x - 1)
+    #         if x < len(grid[y]) - 1:
+    #             floodfill(grid , y, x + 1)
+    #         if y > 0:
+    #             floodfill(grid, y - 1, x)
+    #         if y < len(grid) - 1:
+    #             floodfill(grid, y + 1 , x)
+    #     return count
+    #
+    # def count_space_down(self):
+    #
+    #     if self.direction = 2:
+    #         return 0
+    #
+    #     prev_h_x, prev_h_y = self.snake[-1]
+    #     x = prev_h_x
+    #     y = prev_h_y - 1
+    #
+    #     global count
+    #     if grid[y][x] == 0:
+    #         grid[y][x] = 3
+    #         count += 1
+    #         if x > 0:
+    #             floodfill(grid, y, x - 1)
+    #         if x < len(grid[y]) - 1:
+    #             floodfill(grid , y, x + 1)
+    #         if y > 0:
+    #             floodfill(grid, y - 1, x)
+    #         if y < len(grid) - 1:
+    #             floodfill(grid, y + 1 , x)
+    #     return count
+    #
+    # def count_space_left(self):
+    #
+    #     if self.direction = 3:
+    #         return 0
+    #
+    #     prev_h_x, prev_h_y = self.snake[-1]
+    #     x = prev_h_x - 1
+    #     y = prev_h_y
+    #
+    #     global count
+    #     if grid[y][x] == 0:
+    #         grid[y][x] = 3
+    #         count += 1
+    #         if x > 0:
+    #             floodfill(grid, y, x - 1)
+    #         if x < len(grid[y]) - 1:
+    #             floodfill(grid , y, x + 1)
+    #         if y > 0:
+    #             floodfill(grid, y - 1, x)
+    #         if y < len(grid) - 1:
+    #             floodfill(grid, y + 1 , x)
+    #     return count
+
+
 
     def left_check(self):
 
@@ -559,3 +663,4 @@ class SnakeApp:
             if move == 1:
                 self.direction = 0
 
+count = 0

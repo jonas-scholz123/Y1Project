@@ -1,4 +1,12 @@
+.gitignore
 __pycache__
 Intro.ipynb
 .ipynb_checkpoints
 weights_0.npy
+weights_1.npy
+weights_2.npy
+weights_3.npy
+moves_0.npy
+moves_1.npy
+moves_2.npy
+moves_3.npy

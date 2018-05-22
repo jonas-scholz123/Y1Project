@@ -8,6 +8,25 @@ UP = 0
 RIGHT = 1
 DOWN = 2
 LEFT = 3
+
+
+
+grid0 = make_grid0
+
+def modify_grid(grid):
+    for snake_pos in self.snake():
+        x = snake_pos[0]
+        y = snake_pos[1]
+        grid[y][x] = 1
+
+    head_x, head_y = self.snake[-1]
+    grid[head_y, head_x] = 2
+
+
+
+
+
+
 '''
 
 class SnakeApp:
@@ -93,6 +112,20 @@ class SnakeApp:
         self.moves = []
         self.draw_canvas()
 
+        #Initialise the grid
+        self.x_width = int(self.size_blx[0])
+        self.y_width = int(self.size_blx[1])
+
+        self.grid0 = np.zeros((self.y_width + 2, self.x_width + 2))
+
+        for i in range(len(self.grid0)):
+            self.grid0[i][0] = 1
+            self.grid0[i][-1] = 1
+
+        for i in range(len(self.grid0[0])):
+            self.grid0[0][i] = 1
+            self.grid0[-1][i] = 1
+
         # Initialise the neural network
         self.weights = weights
         self.model = Model()
@@ -157,7 +190,39 @@ class SnakeApp:
             # Update the game world after the move
             self.draw_canvas()
 
-            # Collect data about new position
+            #transcribe the current game into grid:
+
+            mod_grid0 = self.grid0.copy()
+            # print(mod_grid)
+            for pos in self.snake:
+                pos_x = int(pos[0]/16)
+                pos_y = int(pos[1]/16)
+                mod_grid0[pos_y][pos_x] = 1 # might be wrong order, CHECK
+
+            head_x = int(self.snake[-1][0]/16)
+            head_y = int(self.snake[-1][1]/16)
+
+            mod_grid0[head_y, head_x] = 2
+
+
+            up_count = self.count_space_up(mod_grid0)
+            right_count = self.count_space_right(mod_grid0)
+            down_count = self.count_space_down(mod_grid0)
+            left_count = self.count_space_left(mod_grid0)
+
+            # print('up: ', up_count)
+            # print('right: ', right_count)
+            # print('down: ', down_count)
+            # print('left: ', left_count)
+            # print(up_count, right_count, down_count, left_count)
+            # print(head_x, head_y)
+
+            #print(self.snake)
+            #print('head: ', self.snake[-1])
+            #print(mod_grid0)
+
+            #Collect data about new position
+
             self.dat_var.set('NN Input: [%d %d %d]' % (self.left_check(), self.front_check(), self.right_check()))
             self.data = [[self.left_check(), self.front_check(), self.right_check(),
                           self.food_differential(m)] for m in [-1, 0, 1]]
@@ -382,99 +447,100 @@ class SnakeApp:
 
 
 
+    def floodfill(self, grid, y, x):
+        global count
+        if len(grid) > y and len(grid[0]) > x:
+            if grid[y][x] == 0:
+                grid[y][x] = 3
+                count += 1
+                if x > 0:
+                    self.floodfill(grid, y, x - 1)
+                if x < len(grid[y]) - 1:
+                    self.floodfill(grid, y, x + 1)
+                if y > 0:
+                    self.floodfill(grid, y - 1, x)
+                if y < len(grid) - 1:
+                    self.floodfill(grid, y + 1 , x)
+        return count
 
+    def count_space_up(self, mod_grid0):
+        global count
+        mod_grid = mod_grid0.copy()
 
-    # def count_space_up(self):
-    #
-    #     if self.direction == 0:
-    #         return 0
-    #
-    #     prev_h_x, prev_h_y = self.snake[-1]
-    #     x = prev_h_x
-    #     y = prev_h_y + 1
-    #
-    #     global count
-    #     if grid[y][x] == 0:
-    #         grid[y][x] = 3
-    #         count += 1
-    #         if x > 0:
-    #             floodfill(grid, y, x - 1)
-    #         if x < len(grid[y]) - 1:
-    #             floodfill(grid , y, x + 1)
-    #         if y > 0:
-    #             floodfill(grid, y - 1, x)
-    #         if y < len(grid) - 1:
-    #             floodfill(grid, y + 1 , x)
-    #     return count
-    #
-    # def count_space_right(self):
-    #
-    #     if self.direction = 1:
-    #         return 0
-    #
-    #     prev_h_x, prev_h_y = self.snake[-1]
-    #     x = prev_h_x + 1
-    #     y = prev_h_y
-    #
-    #     global count
-    #     if grid[y][x] == 0:
-    #         grid[y][x] = 3
-    #         count += 1
-    #         if x > 0:
-    #             floodfill(grid, y, x - 1)
-    #         if x < len(grid[y]) - 1:
-    #             floodfill(grid , y, x + 1)
-    #         if y > 0:
-    #             floodfill(grid, y - 1, x)
-    #         if y < len(grid) - 1:
-    #             floodfill(grid, y + 1 , x)
-    #     return count
-    #
-    # def count_space_down(self):
-    #
-    #     if self.direction = 2:
-    #         return 0
-    #
-    #     prev_h_x, prev_h_y = self.snake[-1]
-    #     x = prev_h_x
-    #     y = prev_h_y - 1
-    #
-    #     global count
-    #     if grid[y][x] == 0:
-    #         grid[y][x] = 3
-    #         count += 1
-    #         if x > 0:
-    #             floodfill(grid, y, x - 1)
-    #         if x < len(grid[y]) - 1:
-    #             floodfill(grid , y, x + 1)
-    #         if y > 0:
-    #             floodfill(grid, y - 1, x)
-    #         if y < len(grid) - 1:
-    #             floodfill(grid, y + 1 , x)
-    #     return count
-    #
-    # def count_space_left(self):
-    #
-    #     if self.direction = 3:
-    #         return 0
-    #
-    #     prev_h_x, prev_h_y = self.snake[-1]
-    #     x = prev_h_x - 1
-    #     y = prev_h_y
-    #
-    #     global count
-    #     if grid[y][x] == 0:
-    #         grid[y][x] = 3
-    #         count += 1
-    #         if x > 0:
-    #             floodfill(grid, y, x - 1)
-    #         if x < len(grid[y]) - 1:
-    #             floodfill(grid , y, x + 1)
-    #         if y > 0:
-    #             floodfill(grid, y - 1, x)
-    #         if y < len(grid) - 1:
-    #             floodfill(grid, y + 1 , x)
-    #     return count
+        if self.direction == 2:
+            return 0
+
+        prev_h_x, prev_h_y = self.snake[-1]
+        x = int(prev_h_x/16)
+        y = int(prev_h_y/16 -1) #check that this -1 is right
+
+        up_count = self.floodfill(mod_grid, y, x)
+        count = 0
+
+        if up_count == 0:
+            return -1
+
+        else:
+            return up_count/400
+
+    def count_space_right(self, mod_grid0):
+        global count
+        mod_grid = mod_grid0.copy()
+
+        if self.direction == 3:
+            return 0
+
+        prev_h_x, prev_h_y = self.snake[-1]
+        x = int(prev_h_x/16 + 1)
+        y = int(prev_h_y/16)
+
+        right_count = self.floodfill(mod_grid, y, x)
+        count = 0
+
+        if right_count == 0:
+            return -1
+
+        else:
+            return right_count/400
+
+    def count_space_down(self, mod_grid0):
+        global count
+        mod_grid = mod_grid0.copy()
+
+        if self.direction == 0:
+            return 0
+
+        prev_h_x, prev_h_y = self.snake[-1]
+        x = int(prev_h_x/16)
+        y = int(prev_h_y/16 + 1)
+
+        down_count = self.floodfill(mod_grid, y, x)
+        count = 0
+
+        if down_count == 0:
+            return -1
+
+        else:
+            return down_count/400
+
+    def count_space_left(self, mod_grid0):
+        global count
+        mod_grid = mod_grid0.copy()
+        if self.direction == 1:
+            return 0
+
+        prev_h_x, prev_h_y = self.snake[-1]
+        x = int(prev_h_x/16 - 1)
+        y = int(prev_h_y/16)
+
+        left_count = self.floodfill(mod_grid, y, x)
+        count = 0
+
+        if left_count == 0:
+            return -1
+
+        else:
+            return left_count/400
 
 
 
@@ -628,7 +694,7 @@ class SnakeApp:
     def make_move(self):
 
         # Ask the network for the best move to make
-        move = self.model.evaluate_move(self.data)
+        move = self.model.evaluate_move(self.data) # data is input data, need to include area count in data
         self.mov_var.set('NN Move: %d' % move)
 
         if self.direction == 0:

@@ -8,25 +8,6 @@ UP = 0
 RIGHT = 1
 DOWN = 2
 LEFT = 3
-
-
-
-grid0 = make_grid0
-
-def modify_grid(grid):
-    for snake_pos in self.snake():
-        x = snake_pos[0]
-        y = snake_pos[1]
-        grid[y][x] = 1
-
-    head_x, head_y = self.snake[-1]
-    grid[head_y, head_x] = 2
-
-
-
-
-
-
 '''
 
 class SnakeApp:
@@ -181,8 +162,8 @@ class SnakeApp:
 
         if f_check:
             self.snake.insert(0, old_snake[0])
-            self.score += 1
-
+            self.score += 100
+            self.move_counter = 0
         self.score_var.set('Score: %d' % (self.score + self.move_counter))
 
         if not no_draw and not (c_check or w_check):
@@ -193,11 +174,11 @@ class SnakeApp:
             #transcribe the current game into grid:
 
             mod_grid0 = self.grid0.copy()
-            # print(mod_grid)
+
             for pos in self.snake:
                 pos_x = int(pos[0]/16)
                 pos_y = int(pos[1]/16)
-                mod_grid0[pos_y][pos_x] = 1 # might be wrong order, CHECK
+                mod_grid0[pos_y][pos_x] = 1
 
             head_x = int(self.snake[-1][0]/16)
             head_y = int(self.snake[-1][1]/16)
@@ -205,18 +186,18 @@ class SnakeApp:
             mod_grid0[head_y, head_x] = 2
 
 
-            up_count = self.count_space_up(mod_grid0)
-            right_count = self.count_space_right(mod_grid0)
-            down_count = self.count_space_down(mod_grid0)
-            left_count = self.count_space_left(mod_grid0)
+            # up_count = self.count_space_up(mod_grid0)
+            # right_count = self.count_space_right(mod_grid0)
+            # down_count = self.count_space_down(mod_grid0)
+            # left_count = self.count_space_left(mod_grid0)
 
-            # print('up: ', up_count)
-            # print('right: ', right_count)
-            # print('down: ', down_count)
-            # print('left: ', left_count)
+            # if (up_count or right_count or down_count or left_count) == -100:
+            #     print('up: ', up_count)
+            #     print('right: ', right_count)
+            #     print('down: ', down_count)
+            #     print('left: ', left_count)
             # print(up_count, right_count, down_count, left_count)
             # print(head_x, head_y)
-
             #print(self.snake)
             #print('head: ', self.snake[-1])
             #print(mod_grid0)
@@ -224,9 +205,17 @@ class SnakeApp:
             #Collect data about new position
 
             self.dat_var.set('NN Input: [%d %d %d]' % (self.left_check(), self.front_check(), self.right_check()))
-            self.data = [[self.left_check(), self.front_check(), self.right_check(),
-                          self.food_differential(m)] for m in [-1, 0, 1]]
+            # self.data = [[self.left_check(), self.front_check(), self.right_check(),\
+            #               up_count, right_count, down_count, left_count,
+            #               self.food_differential(m)] for m in [-1, 0, 1]]
+
+            self.data = [[self.count(mod_grid0, m), self.food_differential(m)] for m in [-1, 0, 1]]
             self.move_counter += 1
+
+            print(self.move_counter)
+            if self.move_counter > 500:
+                self.direction = 2
+            #print(self.data)
 
             # Ask the AI for the next move
             if self.ai:
@@ -462,6 +451,52 @@ class SnakeApp:
                 if y < len(grid) - 1:
                     self.floodfill(grid, y + 1 , x)
         return count
+
+    def count(self, mod_grid0, move):
+
+        if self.direction == 0:
+            if move == -1:
+                move_direction = 3
+            if move == 0:
+                move_direction = 0
+            if move == 1:
+                move_direction = 1
+
+        if self.direction == 1:
+            if move == -1:
+                move_direction = 0
+            if move == 0:
+                move_direction = 1
+            if move == 1:
+                move_direction = 2
+
+        if self.direction == 2:
+            if move == -1:
+                move_direction = 1
+            if move == 0:
+                move_direction = 2
+            if move == 1:
+                move_direction = 3
+
+        if self.direction == 3:
+            if move == -1:
+                move_direction = 2
+            if move == 0:
+                move_direction = 3
+            if move == 1:
+                move_direction = 0
+
+        if move_direction == 0:
+            return(self.count_space_up(mod_grid0))
+
+        if move_direction == 1:
+            return(self.count_space_right(mod_grid0))
+
+        if move_direction == 2:
+            return(self.count_space_down(mod_grid0))
+
+        if move_direction == 3:
+            return(self.count_space_left(mod_grid0))
 
     def count_space_up(self, mod_grid0):
         global count

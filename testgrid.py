@@ -2,6 +2,7 @@ import numpy as np
 from random import randint
 
 def makegrid(y_width, x_width):
+    # makes grid
     grid = np.zeros((y_width, x_width))
 
     for i in range(len(grid)):
@@ -23,10 +24,10 @@ def makegrid(y_width, x_width):
     x_coord = head_x
     y_coord = head_y
 
-    print('head x: ', head_x)
-    print('head y: ', head_y)
+    print('head at (', head_x, ',' ,head_y, ')')
 
-    while i < snake_length and j < 3000:
+    #makes random snake inside of grid
+    while i < snake_length and j < 100: #j stops the while loop when building the snake fails
 
         j += 1
         dir = randint(0,3) # 0 = up, 1 = left, 2 = down, 3 = right
@@ -61,7 +62,8 @@ def makegrid(y_width, x_width):
                 i += 1
 
     print('j: ', j)
+    if j == 100:
+        print('Snake not full length!')
     return grid, head_y, head_x
 
 snake_length = 30
-print(makegrid(15, 15))

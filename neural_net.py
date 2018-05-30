@@ -13,7 +13,8 @@ class Model:
         # Construct the model below using
         # model.add(...)
         self.model = Sequential()
-        self.model.add(Dense(5, input_shape=(2,)))
+        self.model.add(Dense(2, input_shape=(3,)))
+        self.model.add(Dense(2))
         self.model.add(Dense(1))
 
     def get_weights(self):
@@ -33,7 +34,7 @@ class Model:
 
     def evaluate_move(self, data):
 
-        eval = np.argmax([self.model.predict(np.array(x).reshape(1, 2))[0][0] for x in data])
+        eval = np.argmax([self.model.predict(np.array(x).reshape(1, 3))[0][0] for x in data])
 
         if eval == 0:
             return -1

@@ -88,18 +88,21 @@ def breeding(weights, scores, species_fertility):
         children.append(child)
     return children
 
+
+
 # Generate 100 sets of random weights
-#weights = [random_weights(model.get_weights()) for i in range(10)]
-weights = [np.load('./weights_3.npy')[36]]
+weights = [random_weights(model.get_weights()) for i in range(100)]
+#weights = np.load('./weights_3.npy')
+#print(weights)
 
 # print(weights[36])
 
 generation = 0
-number_of_gens = 4
+number_of_gens = 5
 
 def evolution(number_of_gens, generation, weights):
     scores = train(generation, weights)
-    children = breeding(weights, scores, 0.8)
+    children = breeding(weights, scores, 0.5)
     generation += 1
     if generation == number_of_gens:
         return

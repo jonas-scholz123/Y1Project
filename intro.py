@@ -3,6 +3,7 @@ import itertools as it
 import collections
 from neural_net import Model
 from train import train
+from random import gauss
 import matplotlib.pyplot as plt
 
 
@@ -19,7 +20,7 @@ current_weights = model.get_weights()
 # We can see the structure of the network (kind of) with the following
 model.model.summary()
 
-# This just returns vectors the same size as prev_weights filled with random numbers
+# This just     s vectors the same size as prev_weights filled with random numbers
 def random_weights(prev_weights):
 
     # Take the shapes from the original weights vectors
@@ -50,7 +51,7 @@ def random_weights(prev_weights):
 
 
 
-def breeding(weights, scores, species_fertility):
+def breeding(weights, scores, species_fertility, sigma):
 
     for i in range(len(weights)):
         score_to_weights[scores[i]] = weights[i]
@@ -82,27 +83,45 @@ def breeding(weights, scores, species_fertility):
         for m , f in zip(mother, father):
             m_flat = m.flatten()
             f_flat = f.flatten()
-            c_flat = [np.random.choice([m_flat[i], f_flat[i]], p =[p_m, p_f]) for i in range(len(m_flat))]
-            child.append(np.array(c_flat).reshape(m.shape))
 
+            c_flat = []
+
+            for i in range(len(m_flat)):
+
+                gene = np.random.choice([m_flat[i], f_flat[i]], p =[p_m, p_f])
+                mut_gene =  gauss(gene, gene * sigma)
+                while not -1 < mut_gene < 1:
+                    mut_gene =  gauss(gene, gene * sigma)
+                c_flat.append(mut_gene)
+
+            #c_flat = [np.random.choice([m_flat[i], f_flat[i]], p =[p_m, p_f]) for i in range(len(m_flat))]
+
+            #mutation
+
+
+
+            child.append(np.array(c_flat).reshape(m.shape))
         children.append(child)
     return children
 
 
 
 # Generate 100 sets of random weights
-weights = [random_weights(model.get_weights()) for i in range(100)]
-#weights = np.load('./weights_3.npy')
+#weights = [random_weights(model.get_weights()) for i in range(100)] # Uncomment this for random weights
+weights = [np.load('./nr0.npy')[0] for i in range(0, 100)]  #Uncomment this for the perfect snake
+scores = [1 for i in range(0, 100)]
+weights = breeding(weights, scores, 1, 0.03)
 #print(weights)
 
 # print(weights[36])
 
 generation = 0
-number_of_gens = 5
+number_of_gens = 3
 
 def evolution(number_of_gens, generation, weights):
+    mutation_factor = 0.1
     scores = train(generation, weights)
-    children = breeding(weights, scores, 0.5)
+    children = breeding(weights, scores, 0.5, mutation_factor)
     generation += 1
     if generation == number_of_gens:
         return

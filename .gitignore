@@ -8,6 +8,10 @@ weights_2.npy
 weights_3.npy
 weights_4.npy
 
+nr56.npy
+weights_1_standby.npy
+weights_2_standby.npy
+
 moves_0.npy
 moves_1.npy
 moves_2.npy

@@ -107,8 +107,8 @@ def breeding(weights, scores, species_fertility, sigma):
 
 
 # Generate 100 sets of random weights
-#weights = [random_weights(model.get_weights()) for i in range(100)]
-weights = [np.load('./weights_2.npy')[0] for i in range(0, 100)]
+#weights = [random_weights(model.get_weights()) for i in range(100)] # Uncomment this for random weights
+weights = [np.load('./nr0.npy')[0] for i in range(0, 100)]  #Uncomment this for the perfect snake
 scores = [1 for i in range(0, 100)]
 weights = breeding(weights, scores, 1, 0.03)
 #print(weights)
